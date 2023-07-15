@@ -1,4 +1,8 @@
 package com.kucharka.Kucharka.repository;
 
-public interface GroceryRepository {
+import com.kucharka.Kucharka.entity.Grocery;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+
+public interface GroceryRepository extends JpaRepository<Grocery,Long> {
 }
