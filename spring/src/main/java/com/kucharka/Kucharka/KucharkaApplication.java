@@ -15,10 +15,7 @@ public class KucharkaApplication  {
 		SpringApplication.run(KucharkaApplication.class, args);
 	}
 
-	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+
 }
 
 
