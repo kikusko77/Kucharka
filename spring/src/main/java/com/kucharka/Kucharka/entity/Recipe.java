@@ -1,5 +1,6 @@
 package com.kucharka.Kucharka.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kucharka.Kucharka.roles.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,7 +8,7 @@ import lombok.*;
 import java.util.List;
 
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
 @Setter
 @Getter
 @Entity
@@ -23,7 +24,7 @@ public class Recipe {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToMany
@@ -31,6 +32,7 @@ public class Recipe {
             name = "recipe_grocery",
             joinColumns = @JoinColumn(name = "recipe_id"),
             inverseJoinColumns = @JoinColumn(name = "grocery_id"))
+    @JsonManagedReference
     private List<Grocery> groceries;
 
 

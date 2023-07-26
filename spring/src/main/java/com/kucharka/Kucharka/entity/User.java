@@ -7,7 +7,7 @@ import lombok.*;
 import java.util.List;
 
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
 @Setter
 @Getter
 @Entity

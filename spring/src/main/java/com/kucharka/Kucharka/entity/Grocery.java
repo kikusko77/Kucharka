@@ -1,5 +1,6 @@
 package com.kucharka.Kucharka.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
 @Setter
 @Getter
 @Entity
@@ -31,9 +32,6 @@ public class Grocery {
     private BigDecimal clean;
 
     @ManyToMany(mappedBy = "groceries")
+    @JsonBackReference
     private List<Recipe> recipes;
-
-
-
-
 }
