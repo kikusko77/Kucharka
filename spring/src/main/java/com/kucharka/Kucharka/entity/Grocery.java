@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,8 +30,8 @@ public class Grocery {
     @Column(name = "clean",nullable = false)
     private BigDecimal clean;
 
-
-
+    @ManyToMany(mappedBy = "groceries")
+    private List<Recipe> recipes;
 
 
 

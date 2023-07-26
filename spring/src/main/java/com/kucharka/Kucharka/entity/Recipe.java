@@ -11,8 +11,8 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "recipe")
+public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -22,14 +22,17 @@ public class User {
     @Column(name = "name",nullable = false)
     private String name;
 
-    @NonNull
-    @Column(name = "password",nullable = false)
-    private String password;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role")
-    private Role role;
+    @ManyToMany
+    @JoinTable(
+            name = "recipe_grocery",
+            joinColumns = @JoinColumn(name = "recipe_id"),
+            inverseJoinColumns = @JoinColumn(name = "grocery_id"))
+    private List<Grocery> groceries;
 
-    @OneToMany(mappedBy = "user")
-    private List<Recipe> recipes;
+
 }
+
