@@ -1,6 +1,9 @@
 package com.kucharka.Kucharka.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.kucharka.Kucharka.entity.User;
+import com.kucharka.Kucharka.entity.Grocery;
 import com.kucharka.Kucharka.roles.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,6 +16,9 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name = "recipe")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,9 +38,5 @@ public class Recipe {
             name = "recipe_grocery",
             joinColumns = @JoinColumn(name = "recipe_id"),
             inverseJoinColumns = @JoinColumn(name = "grocery_id"))
-    @JsonManagedReference
     private List<Grocery> groceries;
-
-
 }
-

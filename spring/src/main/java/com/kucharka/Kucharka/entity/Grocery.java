@@ -1,6 +1,8 @@
 package com.kucharka.Kucharka.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.kucharka.Kucharka.entity.Recipe;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,6 +15,9 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name = "grocery")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Grocery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +37,5 @@ public class Grocery {
     private BigDecimal clean;
 
     @ManyToMany(mappedBy = "groceries")
-    @JsonBackReference
     private List<Recipe> recipes;
 }
