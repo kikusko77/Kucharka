@@ -1,6 +1,8 @@
 package com.kucharka.Kucharka.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.kucharka.Kucharka.entity.User;
 import com.kucharka.Kucharka.entity.Grocery;
@@ -29,8 +31,10 @@ public class Recipe {
     @Column(name = "name",nullable = false)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JsonBackReference
+
     private User user;
 
     @ManyToMany

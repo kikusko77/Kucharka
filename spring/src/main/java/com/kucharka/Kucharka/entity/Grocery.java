@@ -1,8 +1,6 @@
 package com.kucharka.Kucharka.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import com.kucharka.Kucharka.entity.Recipe;
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,6 +36,9 @@ public class Grocery {
     private BigDecimal clean;
 
     @ManyToMany(mappedBy = "groceries")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnore
     private List<Recipe> recipes;
+
 }
+
+
