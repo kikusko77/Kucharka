@@ -1,5 +1,4 @@
 package com.kucharka.Kucharka.entity;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -12,35 +11,28 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 @Setter
 @Getter
 @Entity
-@Table(name = "recipe")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
-public class Recipe {
+@Table(name = "recipe_grocery")
+
+public class RecipeGrocery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @NonNull
-    @Column(name = "name",nullable = false)
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "recipe_id")
+    private Recipe recipe;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
-    @JsonBackReference
-    private User user;
+    @ManyToOne
+    @JoinColumn(name = "grocery_id")
+    private Grocery grocery;
 
-    @Column(name = "selling_price")
-    private BigDecimal sellingPrice;
+    private BigDecimal priceForKg;
+    private BigDecimal weight;
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
-    private List<RecipeGrocery> recipeGroceries;
 
 }

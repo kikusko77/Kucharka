@@ -2,13 +2,16 @@ package com.kucharka.Kucharka.service;
 
 import com.kucharka.Kucharka.entity.Grocery;
 import com.kucharka.Kucharka.entity.Recipe;
+import com.kucharka.Kucharka.entity.RecipeGrocery;
 import com.kucharka.Kucharka.entity.User;
 import com.kucharka.Kucharka.repository.GroceryRepository;
+import com.kucharka.Kucharka.repository.RecipeGroceryRepository;
 import com.kucharka.Kucharka.repository.RecipeRepository;
 import com.kucharka.Kucharka.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +21,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
     private final GroceryRepository groceryRepository;
+    private final RecipeGroceryRepository recipeGroceryRepository;
 
 
 
@@ -26,13 +30,17 @@ public class RecipeServiceImpl implements RecipeService {
     public Recipe addRecipe(Recipe recipe) {
         User user = userRepository.findById(recipe.getUser().getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        List<Grocery> groceries = groceryRepository.findAllById(
-                recipe.getGroceries().stream()
-                        .map(Grocery::getId)
-                        .collect(Collectors.toList())
-        );
         recipe.setUser(user);
-        recipe.setGroceries(groceries);
+
+        List<RecipeGrocery> recipeGroceries = new ArrayList<>();
+        for (RecipeGrocery rg : recipe.getRecipeGroceries()) {
+            Grocery grocery = groceryRepository.findById(rg.getGrocery().getId())
+                    .orElseThrow(() -> new RuntimeException("Grocery not found"));
+            rg.setGrocery(grocery);
+            rg.setRecipe(recipe);
+            recipeGroceries.add(rg);
+        }
+        recipe.setRecipeGroceries(recipeGroceries);
 
         return recipeRepository.save(recipe);
     }
@@ -51,18 +59,21 @@ public class RecipeServiceImpl implements RecipeService {
     public Recipe updateRecipe(Recipe recipe) {
         User user = userRepository.findById(recipe.getUser().getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
-        List<Grocery> groceries = groceryRepository.findAllById(
-                recipe.getGroceries().stream()
-                        .map(Grocery::getId)
-                        .collect(Collectors.toList())
-        );
-
         recipe.setUser(user);
-        recipe.setGroceries(groceries);
 
+        Recipe updatedRecipe = recipeRepository.save(recipe);
 
-        return recipeRepository.save(recipe);
+        for (RecipeGrocery recipeGrocery : recipe.getRecipeGroceries()) {
+            Grocery grocery = groceryRepository.findById(recipeGrocery.getGrocery().getId())
+                    .orElseThrow(() -> new RuntimeException("Grocery not found"));
+
+            recipeGrocery.setRecipe(updatedRecipe);
+            recipeGrocery.setGrocery(grocery);
+
+            recipeGroceryRepository.save(recipeGrocery);
+        }
+
+        return updatedRecipe;
     }
 
     @Override

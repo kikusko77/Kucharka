@@ -35,9 +35,10 @@ public class Grocery {
     @Column(name = "clean",nullable = false)
     private BigDecimal clean;
 
-    @ManyToMany(mappedBy = "groceries")
+    @OneToMany(mappedBy = "grocery", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Recipe> recipes;
+    private List<RecipeGrocery> recipeGroceries;
+
 
 }
 
