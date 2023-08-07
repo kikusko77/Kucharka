@@ -1,6 +1,6 @@
 package com.kucharka.Kucharka.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import com.kucharka.Kucharka.roles.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,6 +32,5 @@ public class User {
     private Role role;
 
     @OneToMany(mappedBy = "user")
-    @JsonManagedReference
     private List<Recipe> recipes;
 }

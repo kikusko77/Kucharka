@@ -1,7 +1,6 @@
 package com.kucharka.Kucharka.entity;
 
 import com.fasterxml.jackson.annotation.*;
-import com.kucharka.Kucharka.entity.Recipe;
 import jakarta.persistence.*;
 import lombok.*;
 

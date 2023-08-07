@@ -1,16 +1,12 @@
 package com.kucharka.Kucharka.entity;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.kucharka.Kucharka.entity.User;
-import com.kucharka.Kucharka.entity.Grocery;
-import com.kucharka.Kucharka.roles.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 @Setter
@@ -20,14 +16,19 @@ import java.util.List;
 
 public class RecipeGrocery {
     @Id
+    @JsonIgnore
+    @NonNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
+    @NonNull
     @JoinColumn(name = "recipe_id")
+    @JsonIgnore
     private Recipe recipe;
 
     @ManyToOne
+    @NonNull
     @JoinColumn(name = "grocery_id")
     private Grocery grocery;
 

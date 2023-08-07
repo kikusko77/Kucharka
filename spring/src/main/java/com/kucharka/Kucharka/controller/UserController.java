@@ -1,7 +1,7 @@
 package com.kucharka.Kucharka.controller;
 
-import com.kucharka.Kucharka.entity.User;
-import com.kucharka.Kucharka.service.UserServiceImpl;
+import com.kucharka.Kucharka.DTO.UserDTO;
+import com.kucharka.Kucharka.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,35 +13,35 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @Autowired
-    public UserController(UserServiceImpl userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<User> addUser(@RequestBody User user) {
-        return new ResponseEntity<>(userService.addUser(user), HttpStatus.CREATED);
+    public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO userDTO) {
+        return new ResponseEntity<>(userService.addUser(userDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
         // Ensure the ID in the path and in the user object are the same
-        if (!id.equals(user.getId())) {
+        if (!id.equals(userDTO.getId())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(userService.updateUser(user), HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateUser(userDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

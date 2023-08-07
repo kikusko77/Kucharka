@@ -1,16 +1,13 @@
 package com.kucharka.Kucharka.service;
 
-import com.kucharka.Kucharka.entity.Grocery;
-import com.kucharka.Kucharka.entity.User;
-import com.kucharka.Kucharka.exception.UserNotFoundException;
-
+import com.kucharka.Kucharka.DTO.UserDTO;
 import java.util.List;
 
 public interface UserService {
-   List<User> getAllUsers();
-   User getUserById(Long id);
-   User addUser(User user);
-   User updateUser(User user);
+   List<UserDTO> getAllUsers();
+   UserDTO getUserById(Long id);
+   UserDTO addUser(UserDTO userDTO);
+   UserDTO updateUser(UserDTO userDTO);
    void deleteUser(Long id);
 
 }

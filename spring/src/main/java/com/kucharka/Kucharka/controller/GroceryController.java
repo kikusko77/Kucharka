@@ -1,6 +1,6 @@
 package com.kucharka.Kucharka.controller;
 
-import com.kucharka.Kucharka.entity.Grocery;
+import com.kucharka.Kucharka.DTO.GroceryDTO;
 import com.kucharka.Kucharka.service.GroceryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,23 +16,23 @@ public class GroceryController {
     private final GroceryService groceryService;
 
     @GetMapping
-    public ResponseEntity<List<Grocery>> getAllGroceries() {
+    public ResponseEntity<List<GroceryDTO>> getAllGroceries() {
         return new ResponseEntity<>(groceryService.getAllGroceries(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Grocery> getGroceryById(@PathVariable Long id){
+    public ResponseEntity<GroceryDTO> getGroceryById(@PathVariable Long id){
         return new ResponseEntity<>(groceryService.getGroceryById(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Grocery> addGrocery(@RequestBody Grocery grocery){
-        return new ResponseEntity<>(groceryService.addGrocery(grocery), HttpStatus.CREATED);
+    public ResponseEntity<GroceryDTO> addGrocery(@RequestBody GroceryDTO groceryDTO){
+        return new ResponseEntity<>(groceryService.addGrocery(groceryDTO), HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<Grocery> updateGrocery(@RequestBody Grocery grocery){
-        return new ResponseEntity<>(groceryService.updateGrocery(grocery), HttpStatus.OK);
+    public ResponseEntity<GroceryDTO> updateGrocery(@RequestBody GroceryDTO groceryDTO){
+        return new ResponseEntity<>(groceryService.updateGrocery(groceryDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
