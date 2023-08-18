@@ -19,6 +19,7 @@ public class GroceryServiceImpl implements GroceryService {
     private final RecipeGroceryRepository recipeGroceryRepository;
     private final ModelMapper modelMapper;
 
+
     @Override
     public List<GroceryDTO> getAllGroceries() {
         return groceryRepository.findAll().stream()

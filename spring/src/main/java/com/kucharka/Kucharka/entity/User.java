@@ -2,9 +2,10 @@ package com.kucharka.Kucharka.entity;
 
 
 import com.kucharka.Kucharka.roles.Role;
-import jakarta.persistence.*;
+
 import lombok.*;
 
+import javax.persistence.*;
 import java.util.List;
 
 @AllArgsConstructor

@@ -11,7 +11,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/groceries")
 public class GroceryController {
     private final GroceryService groceryService;
 

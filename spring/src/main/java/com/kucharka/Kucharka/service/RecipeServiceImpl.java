@@ -138,11 +138,9 @@ public class RecipeServiceImpl implements RecipeService {
 
         return modelMapper.map(updatedRecipe, RecipeDTO.class);
     }
-
-
-
     @Override
     public void deleteRecipe(Long id) {
         recipeRepository.deleteById(id);
     }
+
 }
