@@ -60,9 +60,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         Collection<? extends GrantedAuthority> authorities = userService.getAuthorities(user);
         String role = authorities.stream().findFirst().map(GrantedAuthority::getAuthority).orElse("").replace("ROLE_", "");
 
+        // Get the user ID
+        Long userId = user.getId();
+
         String token = JWT.create()
                 .withSubject(authResult.getName())
                 .withClaim("role", role) // Include the role as a claim
+                .withClaim("userId", userId) // Include the user ID as a claim
                 .withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.TOKEN_EXPIRATION))
                 .sign(Algorithm.HMAC512(SecurityConstants.SECRET_KEY));
         response.addHeader(SecurityConstants.AUTHORIZATION, SecurityConstants.BEARER + token);
