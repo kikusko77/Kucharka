@@ -22,17 +22,15 @@ public class RecipeController {
         return new ResponseEntity<>(newRecipe, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<RecipeDTO> getRecipeById(@PathVariable Long id) {
-        RecipeDTO recipe = recipeService.getRecipeById(id);
-        return new ResponseEntity<>(recipe, HttpStatus.OK);
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<RecipeDTO>> getAllRecipesByUserId(@PathVariable Long userId) {
+       List<RecipeDTO> recipes = recipeService.getAllRecipesByUserId(userId);
+       return new ResponseEntity<>(recipes, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<RecipeDTO>> getAllRecipes() {
-        List<RecipeDTO> recipes = recipeService.getAllRecipes();
-        return new ResponseEntity<>(recipes, HttpStatus.OK);
-    }
+
+
 
     @PutMapping
     public ResponseEntity<RecipeDTO> updateRecipe(@RequestBody RecipeDTO recipeDTO) {

@@ -12,6 +12,9 @@ import com.kucharka.Kucharka.repository.RecipeRepository;
 import com.kucharka.Kucharka.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -29,15 +32,15 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public RecipeDTO addRecipe(RecipeDTO recipeDTO) {
         Recipe recipe = modelMapper.map(recipeDTO, Recipe.class);
-        User user = recipe.getUser();
-        if (user == null) {
-            throw new RuntimeException("User information is missing in the recipe");
-        }
 
-        Long userId = user.getId();
-        User existingUser = userRepository.findById(userId)
+        // Get the authenticated user's username from the security context
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = (String) authentication.getPrincipal();
+
+        User existingUser = userRepository.findByName(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         recipe.setUser(existingUser);
+
 
         Map<Long, RecipeGrocery> uniqueRecipeGroceries = new HashMap<>();
         for (RecipeGrocery rg : recipe.getRecipeGroceries()) {
@@ -52,22 +55,25 @@ public class RecipeServiceImpl implements RecipeService {
         return modelMapper.map(recipeRepository.save(recipe), RecipeDTO.class);
     }
 
-    @Override
-    public RecipeDTO getRecipeById(Long id) {
-        Recipe recipe = recipeRepository.findById(id).orElse(null);
-        RecipeDTO recipeDTO = modelMapper.map(recipe, RecipeDTO.class);
 
-        for (int i = 0; i < recipe.getRecipeGroceries().size(); i++) {
-            recipeDTO.getRecipeGroceries().get(i).setGroceryId(recipe.getRecipeGroceries().get(i).getGrocery().getId()); // Set the grocery IDs
+
+    @Override
+    public List<RecipeDTO> getAllRecipesByUserId(Long userId) {
+        // Get the authenticated user's username from the security context
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = (String) authentication.getPrincipal();
+        User authenticatedUser = userRepository.findByName(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Check if the authenticated user's ID matches the user ID parameter
+        if (!authenticatedUser.getId().equals(userId)) {
+            throw new IllegalArgumentException("You do not have permission to access these recipes.");
         }
 
-        return recipeDTO;
-    }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-
-    @Override
-    public List<RecipeDTO> getAllRecipes() {
-        List<Recipe> recipes = recipeRepository.findAll();
+        List<Recipe> recipes = recipeRepository.findAllByUser(user);
         return recipes.stream()
                 .map(recipe -> {
                     RecipeDTO recipeDTO = modelMapper.map(recipe, RecipeDTO.class);
@@ -82,23 +88,21 @@ public class RecipeServiceImpl implements RecipeService {
 
 
 
+
     @Override
     public RecipeDTO updateRecipe(RecipeDTO recipeDTO) {
         Recipe existingRecipe = recipeRepository.findById(recipeDTO.getId())
                 .orElseThrow(() -> new RuntimeException("Recipe not found"));
 
-        // Update the properties of the existing Recipe entity
-        existingRecipe.setName(recipeDTO.getName());
-        existingRecipe.setSellingPrice(recipeDTO.getSellingPrice());
+        // Get the authenticated user's username from the security context
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = (String) authentication.getPrincipal();
+        User authenticatedUser = userRepository.findByName(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Long userId = recipeDTO.getUserId();
-        if (userId == null) {
-            throw new IllegalArgumentException("RecipeDTO must have a valid userId.");
-        }
-
-        // Check if the user ID in the RecipeDTO matches the existing Recipe's user ID
-        if (!existingRecipe.getUser().getId().equals(userId)) {
-            throw new IllegalArgumentException("Cannot change the user of an existing Recipe.");
+        // Check if the authenticated user is the owner of the recipe
+        if (!existingRecipe.getUser().getId().equals(authenticatedUser.getId())) {
+            throw new IllegalArgumentException("You do not have permission to update this recipe.");
         }
 
         // Update the RecipeGrocery entities
@@ -113,6 +117,9 @@ public class RecipeServiceImpl implements RecipeService {
             // Update the properties of the existing RecipeGrocery entity
             existingRG.setPriceForKg(rgDTO.getPriceForKg());
             existingRG.setWeight(rgDTO.getWeight());
+            existingRecipe.setName(recipeDTO.getName());
+            existingRecipe.setSellingPrice(recipeDTO.getSellingPrice());
+
 
             updatedRecipeGroceries.put(groceryId, existingRG);
         }
@@ -140,7 +147,22 @@ public class RecipeServiceImpl implements RecipeService {
     }
     @Override
     public void deleteRecipe(Long id) {
+        Recipe existingRecipe = recipeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Recipe not found"));
+
+        // Get the authenticated user's username from the security context
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = (String) authentication.getPrincipal();
+        User authenticatedUser = userRepository.findByName(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Check if the authenticated user is the owner of the recipe
+        if (!existingRecipe.getUser().getId().equals(authenticatedUser.getId())) {
+            throw new IllegalArgumentException("You do not have permission to delete this recipe.");
+        }
+
         recipeRepository.deleteById(id);
     }
+
 
 }
