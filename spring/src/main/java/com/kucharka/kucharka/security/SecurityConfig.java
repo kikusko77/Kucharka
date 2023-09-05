@@ -30,10 +30,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080"));
-        configuration.setAllowedOrigins(Arrays.asList("https://kucharka.vercel.app"));
-        configuration.setAllowedOrigins(Arrays.asList("https://kucharka-gumimaco.vercel.app"));
-        configuration.setAllowedOrigins(Arrays.asList("https://kucharka-git-main-gumimaco.vercel.app"));
+        configuration.setAllowedOrigins(Arrays.asList(
+                "http://localhost:8080",
+                "https://kucharka.vercel.app",
+                "https://kucharka-gumimaco.vercel.app",
+                "https://kucharka-git-main-gumimaco.vercel.app"
+        ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
@@ -43,6 +45,7 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 
 
 
